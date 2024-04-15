@@ -30,7 +30,7 @@ function insert_dummy_user() {
     # get MYSQL_ROOT_PASSWORD from .env
     MYSQL_ROOT_PASSWORD=$(grep MYSQL_ROOT_PASSWORD .env | cut -d '=' -f2)
     MYSQL_DATABASE=$(grep MYSQL_DATABASE .env | cut -d '=' -f2)
-    docker-compose exec -T mysql mysql -u root -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE" < database/test_data/insert_dummy_user.sql
+    docker-compose exec -T mysql mysql -u root -p"$MYSQL_ROOT_PASSWORD" "$MYSQL_DATABASE" < ./database/test_data/insert_dummy_user.sql
 }
 
 # check the argument and execute the corresponding function
