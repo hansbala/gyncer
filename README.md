@@ -21,6 +21,12 @@ Protected Routes:
 
 ## Local Development
 
+### `.env`
+
+`cp .env.template .env` and make the necessary changes
+
+Run this before any of the below steps
+
 ### Database
 
 You need a local database setup to test the API. This command sets up a local SQL database
@@ -34,3 +40,4 @@ Some more helpful database utilities are included in `database/local_db_tools.sh
 ### Local API
 
 `go run .` sets up the API running locally on `localhost:8080`.
+TODO: Migrate this to docker too

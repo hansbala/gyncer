@@ -19,7 +19,7 @@ func ConnectToDB() (*sql.DB, error) {
 		User:   os.Getenv("MYSQL_ROOT_USER"),
 		Passwd: os.Getenv("MYSQL_ROOT_PASSWORD"),
 		Net:    "tcp",
-		Addr:   "127.0.0.1:3369",
+		Addr:   "127.0.0.1:" + os.Getenv("MYSQL_HOST_PORT"),
 		DBName: os.Getenv("MYSQL_DATABASE"),
 	}
 	// Get a database handle.
