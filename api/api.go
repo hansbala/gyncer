@@ -9,7 +9,10 @@ import (
 )
 
 func main() {
-	router := gin.Default()
+	router := gin.New()
+	router.Use(gin.Logger())
+	router.Use(gin.Recovery())
+
 	// user auth routes
 	router.POST("/users", user.CreateNewUserHandler)
 	router.POST("/login", user.LogInUserHandler)
