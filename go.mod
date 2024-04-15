@@ -5,7 +5,6 @@ go 1.22.2
 require (
 	github.com/gin-gonic/gin v1.9.1
 	github.com/go-sql-driver/mysql v1.8.1
-	github.com/joho/godotenv v1.5.1
 	github.com/pkg/errors v0.9.1
 	github.com/stretchr/testify v1.8.3
 	golang.org/x/crypto v0.9.0

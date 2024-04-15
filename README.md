@@ -21,7 +21,7 @@ Protected Routes:
 
 ## Local Development
 
-### `.env`
+### Environment Setup
 
 `cp .env.template .env` and make the necessary changes
 

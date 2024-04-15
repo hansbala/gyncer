@@ -17,5 +17,5 @@ func main() {
 	// sync routes
 	router.POST("/sync", middleware.JWTTokenAuthMiddleware(), syncs.CreateSyncHandler)
 
-	router.Run("localhost:8080")
+	router.Run(":8080")
 }

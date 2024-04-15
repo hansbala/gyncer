@@ -1,4 +1,20 @@
 services:
+  gyncer-app:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+    networks:
+      - gyncer-network
+    environment:
+      - MYSQL_ROOT_USER=${MYSQL_ROOT_USER}
+      - MYSQL_ROOT_PASSWORD=${MYSQL_ROOT_PASSWORD}
+      - MYSQL_DATABASE=${MYSQL_DATABASE}
+      - MYSQL_USER=${MYSQL_USER}
+      - MYSQL_PASSWORD=${MYSQL_PASSWORD}
+      - JWT_SECRET=${JWT_SECRET}
+    restart: always
   mysql:
     image: mysql:latest
     environment:
@@ -8,11 +24,15 @@ services:
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
     ports:
       # MySQL always listens on port 3306
-      - "${MYSQL_HOST_PORT}:3306"
+      - "3306:3306"
+    networks:
+      - gyncer-network
     volumes:
       - mysql_data:/var/lib/mysql
       - ./database/gyncer.sql:/docker-entrypoint-initdb.d/gyncer.sql
     restart: always
-
+networks:
+  gyncer-network:
+    driver: bridge
 volumes:
   mysql_data:

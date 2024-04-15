@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/golang-jwt/jwt"
-	"github.com/joho/godotenv"
 )
 
 type Claims struct {
@@ -17,9 +16,6 @@ type Claims struct {
 
 // generates a new JWT auth token
 func GenerateJWT(email string) (string, error) {
-	if err := godotenv.Load(); err != nil {
-		return "", err
-	}
 	secretToken := os.Getenv("JWT_SECRET")
 	expirationTime := time.Now().Add(15 * time.Minute)
 	claims := &Claims{
@@ -39,9 +35,6 @@ func GenerateJWT(email string) (string, error) {
 
 // validates a signed JWT auth token
 func ValidateJWT(signedToken string) (*Claims, error) {
-	if err := godotenv.Load(); err != nil {
-		return nil, err
-	}
 	secretToken := os.Getenv("JWT_SECRET")
 	token, err := jwt.ParseWithClaims(signedToken, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(secretToken), nil
