@@ -25,19 +25,16 @@ Protected Routes:
 
 `cp .env.template .env` and make the necessary changes
 
-Run this before any of the below steps
+Run this before starting docker
 
-### Database
+### Local API and database
 
-You need a local database setup to test the API. This command sets up a local SQL database
+Docker is amazing.
 
-```
-docker-compose up -d
-```
+`docker-compose up --build -d` to start all services.
 
-Some more helpful database utilities are included in `database/local_db_tools.sh`
+To get back:
+`docker-compose down`
 
-### Local API
-
-`go run .` sets up the API running locally on `localhost:8080`.
-TODO: Migrate this to docker too
+To also delete the persistent MySQL volume:
+`docker-compose down --volumes`
