@@ -29,6 +29,8 @@ CREATE TABLE IF NOT EXISTS Syncs (
     -- default is once every 24 hours
     -- so if sync frequency is 2 it syncs once every 2 hours
     sync_frequency INT NOT NULL,
+    -- timestamp the last sync happened
+    last_sync_time TIMESTAMP DEFAULT NULL,
     PRIMARY KEY (id),
     UNIQUE (source_playlist_id, destination_playlist_id),
     FOREIGN KEY (user_id) REFERENCES Users(id)

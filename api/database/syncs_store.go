@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"errors"
 	"gyncer/core"
+	"time"
 )
 
 type Sync struct {
@@ -36,6 +37,9 @@ var INSERT_SYNC_QUERY = `
 		sync_frequency
 	) VALUES (?, ?, ?, ?, ?, ?)
 `
+var GET_SYNC_TO_SYNC_QUERY = `
+	SELECT id FROM Syncs WHERE last_synced_at = NULL OR DATE_ADD(last_synced_at, INTERVAL sync_frequency HOUR) < ?
+`
 
 // insert a new sync into the Syncs table
 func InsertNewSync(db *sql.DB, newSync *Sync) error {
@@ -66,4 +70,28 @@ func InsertNewSync(db *sql.DB, newSync *Sync) error {
 	}
 
 	return nil
+}
+
+// based on the time provided, returns the sync ids that need to be synced
+func GetSyncsToSync(db *sql.DB, currentTime time.Time) ([]int, error) {
+	stmt, err := db.Prepare(GET_SYNC_TO_SYNC_QUERY)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	res, err := stmt.Query(currentTime.Format("2006-01-02 15:04:05"))
+	if err != nil {
+		return nil, err
+	}
+	syncIds := make([]int, 0)
+	for res.Next() {
+		var syncId int
+		err := res.Scan(&syncId)
+		if err != nil {
+			return nil, err
+		}
+		syncIds = append(syncIds, syncId)
+	}
+	return syncIds, nil
 }
