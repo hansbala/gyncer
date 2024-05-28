@@ -35,3 +35,33 @@ CREATE TABLE IF NOT EXISTS Syncs (
     UNIQUE (source_playlist_id, destination_playlist_id),
     FOREIGN KEY (user_id) REFERENCES Users(id)
 );
+
+CREATE TABLE IF NOT EXISTS SpotifyKeys (
+    -- unique id for this key
+    id INT NOT NULL AUTO_INCREMENT,
+    -- user id associated with this key (hash of the user email)
+    user_id VARCHAR(64) UNIQUE NOT NULL,
+    -- auth code spotify gave us
+    auth_code VARCHAR(1000) NOT NULL,
+    -- access token (this is used to make the API call)
+    access_token VARCHAR(500) NOT NULL,
+    -- `refresh_token` along with `auth_code` is used to retrieve new `access_token`
+    refresh_token VARCHAR(500) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_id) REFERENCES Users(id)
+)
+
+CREATE TABLE IF NOT EXISTS GoogleKeys (
+    -- unique id for this key
+    id INT NOT NULL AUTO_INCREMENT,
+    -- user id associated with this key (hash of the user email)
+    user_id VARCHAR(64) UNIQUE NOT NULL,
+    -- auth code spotify gave us
+    auth_code VARCHAR(1000) NOT NULL,
+    -- access token (this is used to make the API call)
+    access_token VARCHAR(500) NOT NULL,
+    -- `refresh_token` along with `auth_code` is used to retrieve new `access_token`
+    refresh_token VARCHAR(500) NOT NULL,
+    PRIMARY KEY (id),
+    FOREIGN KEY (user_id) REFERENCES Users(id)
+)
