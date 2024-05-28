@@ -2,9 +2,9 @@ package database
 
 import (
 	"database/sql"
-	"gyncer/core"
 	"log"
 
+	"github.com/hansbala/gyncer/core"
 	"golang.org/x/crypto/bcrypt"
 )
 

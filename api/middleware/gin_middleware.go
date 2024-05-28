@@ -2,11 +2,11 @@ package middleware
 
 import (
 	"fmt"
-	"gyncer/core"
 	"net/http"
 	"strings"
 
 	"github.com/gin-gonic/gin"
+	"github.com/hansbala/gyncer/core"
 )
 
 func JWTTokenAuthMiddleware() gin.HandlerFunc {

@@ -1,9 +1,9 @@
 package main
 
 import (
-	"gyncer/middleware"
-	"gyncer/syncs"
-	"gyncer/user"
+	"github.com/hansbala/gyncer/middleware"
+	"github.com/hansbala/gyncer/syncs"
+	"github.com/hansbala/gyncer/user"
 
 	"github.com/gin-gonic/gin"
 )
@@ -19,6 +19,7 @@ func main() {
 
 	// sync routes
 	router.POST("/sync", middleware.JWTTokenAuthMiddleware(), syncs.CreateSyncHandler)
+	router.POST("/startsync", middleware.JWTTokenAuthMiddleware(), syncs.StartSyncsHandler)
 
 	router.Run(":8080")
 }

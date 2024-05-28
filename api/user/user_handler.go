@@ -1,12 +1,12 @@
 package user
 
 import (
-	"gyncer/core"
-	"gyncer/database"
 	"log"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/hansbala/gyncer/core"
+	"github.com/hansbala/gyncer/database"
 	"github.com/pkg/errors"
 )
 

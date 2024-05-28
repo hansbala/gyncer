@@ -2,11 +2,19 @@ package syncs
 
 import (
 	"fmt"
-	"gyncer/database"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
+	"github.com/hansbala/gyncer/database"
 )
+
+// given a list of string ids starts a new sync
+func StartSyncsHandler(c *gin.Context) {
+	var sync database.StartSync
+	if err := c.BindJSON(&sync); err != nil {
+		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "malformed input"})
+	}
+}
 
 // creates a new sync in the database
 func CreateSyncHandler(c *gin.Context) {

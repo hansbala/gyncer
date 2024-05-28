@@ -3,8 +3,46 @@ package database
 import (
 	"database/sql"
 	"errors"
-	"gyncer/core"
 	"time"
+
+	"github.com/hansbala/gyncer/core"
+)
+
+const (
+	cInsertSyncQuery = `
+	INSERT INTO Syncs (
+		user_id,
+		source_datasource,
+		source_playlist_id,
+		destination_datasource,
+		destination_playlist_id,
+		sync_frequency
+	) VALUES (?, ?, ?, ?, ?, ?)
+`
+
+	cGetSyncsToSyncQuery = `
+	SELECT
+		id
+	FROM
+		Syncs 
+	WHERE
+		last_synced_at = NULL OR DATE_ADD(last_synced_at, INTERVAL sync_frequency HOUR) < ?`
+
+	cGetSyncDataQuery = `
+	SELECT
+		id,
+		user_id, 
+		source_datasource,
+		source_playlist_id,
+		destination_datasource,
+		destination_playlist_id,
+		sync_frequency 
+	FROM
+		Syncs
+	WHERE
+		id = ?
+	LIMIT
+		1`
 )
 
 type Sync struct {
@@ -14,6 +52,10 @@ type Sync struct {
 	DestinationDatasource string `json:"destinationDatasource"`
 	DestinationPlaylistId string `json:"destinationPlaylistId"`
 	SyncFrequency         int32  `json:"syncFrequency"`
+}
+
+type StartSync struct {
+	SyncIds []string `json:"syncIds"`
 }
 
 func (sync *Sync) IsValidSync() bool {
@@ -27,23 +69,9 @@ func (sync *Sync) IsValidSync() bool {
 	// TODO: validate playlist ids and maybe user id?
 }
 
-var INSERT_SYNC_QUERY = `
-	INSERT INTO Syncs (
-		user_id,
-		source_datasource,
-		source_playlist_id,
-		destination_datasource,
-		destination_playlist_id,
-		sync_frequency
-	) VALUES (?, ?, ?, ?, ?, ?)
-`
-var GET_SYNC_TO_SYNC_QUERY = `
-	SELECT id FROM Syncs WHERE last_synced_at = NULL OR DATE_ADD(last_synced_at, INTERVAL sync_frequency HOUR) < ?
-`
-
 // insert a new sync into the Syncs table
 func InsertNewSync(db *sql.DB, newSync *Sync) error {
-	stmt, err := db.Prepare(INSERT_SYNC_QUERY)
+	stmt, err := db.Prepare(cInsertSyncQuery)
 	if err != nil {
 		return err
 	}
@@ -72,9 +100,32 @@ func InsertNewSync(db *sql.DB, newSync *Sync) error {
 	return nil
 }
 
+func GetSyncData(db *sql.DB, syncId string) (*Sync, error) {
+	stmt, err := db.Prepare(cGetSyncDataQuery)
+	if err != nil {
+		return nil, err
+	}
+	defer stmt.Close()
+
+	rows, err := stmt.Query(syncId)
+	if err != nil {
+		return nil, err
+	}
+	var syncData Sync
+	for rows.Next() {
+		// TODO(Hans): Serialize data before reading
+		if err := rows.Scan(&syncData); err != nil {
+			return nil, err
+		}
+		// TODO(Hans): static analysis
+		return &syncData, nil
+	}
+	return nil, errors.New("failed to get sync data from SQL")
+}
+
 // based on the time provided, returns the sync ids that need to be synced
 func GetSyncsToSync(db *sql.DB, currentTime time.Time) ([]int, error) {
-	stmt, err := db.Prepare(GET_SYNC_TO_SYNC_QUERY)
+	stmt, err := db.Prepare(cGetSyncsToSyncQuery)
 	if err != nil {
 		return nil, err
 	}

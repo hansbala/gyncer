@@ -1,9 +1,9 @@
 package core_test
 
 import (
-	"gyncer/core"
 	"testing"
 
+	"github.com/hansbala/gyncer/core"
 	"github.com/stretchr/testify/assert"
 )
 

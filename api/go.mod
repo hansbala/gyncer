@@ -1,4 +1,4 @@
-module gyncer
+module github.com/hansbala/gyncer
 
 go 1.22.2
 

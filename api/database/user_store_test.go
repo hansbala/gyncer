@@ -1,12 +1,12 @@
 package database_test
 
 import (
-	"gyncer/core"
-	"gyncer/database"
 	"regexp"
 	"testing"
 
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/hansbala/gyncer/core"
+	"github.com/hansbala/gyncer/database"
 	"github.com/stretchr/testify/assert"
 )
 
