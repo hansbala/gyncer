@@ -14,6 +14,19 @@ func StartSyncsHandler(c *gin.Context) {
 	if err := c.BindJSON(&sync); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "malformed input"})
 	}
+	db, err := database.ConnectToDB()
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": "database connection error"})
+		return
+	}
+	syncDatas, err := database.GetSyncDatas(db, sync.SyncIds)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
+	if err = StartSyncWrapper(syncDatas); err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+	}
+	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("success: finished %d syncs", len(sync.SyncIds))})
 }
 
 // creates a new sync in the database
@@ -42,5 +55,5 @@ func CreateSyncHandler(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, gin.H{"message": "sync created"})
+	c.JSON(http.StatusCreated, gin.H{"message": "success: sync created"})
 }

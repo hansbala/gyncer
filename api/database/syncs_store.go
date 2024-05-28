@@ -3,6 +3,7 @@ package database
 import (
 	"database/sql"
 	"errors"
+	"strings"
 	"time"
 
 	"github.com/hansbala/gyncer/core"
@@ -40,9 +41,7 @@ const (
 	FROM
 		Syncs
 	WHERE
-		id = ?
-	LIMIT
-		1`
+		id IN (?)`
 )
 
 type Sync struct {
@@ -100,27 +99,31 @@ func InsertNewSync(db *sql.DB, newSync *Sync) error {
 	return nil
 }
 
-func GetSyncData(db *sql.DB, syncId string) (*Sync, error) {
+// given a list of sync ids returns an array of []Sync
+func GetSyncDatas(db *sql.DB, syncIds []string) ([]Sync, error) {
 	stmt, err := db.Prepare(cGetSyncDataQuery)
 	if err != nil {
 		return nil, err
 	}
 	defer stmt.Close()
 
-	rows, err := stmt.Query(syncId)
+	rows, err := stmt.Query(strings.Join(syncIds, ","))
 	if err != nil {
 		return nil, err
 	}
-	var syncData Sync
+	syncDatas := make([]Sync, 0)
 	for rows.Next() {
-		// TODO(Hans): Serialize data before reading
+		var syncData Sync
+		// TODO(Hans): make sure this is okay
 		if err := rows.Scan(&syncData); err != nil {
 			return nil, err
 		}
-		// TODO(Hans): static analysis
-		return &syncData, nil
+		syncDatas = append(syncDatas, syncData)
 	}
-	return nil, errors.New("failed to get sync data from SQL")
+	if len(syncDatas) != len(syncIds) {
+		return nil, errors.New("mismatch between number of sync datas and sync ids")
+	}
+	return syncDatas, nil
 }
 
 // based on the time provided, returns the sync ids that need to be synced
