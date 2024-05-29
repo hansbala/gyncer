@@ -1,7 +1,7 @@
 services:
-  api:
+  server:
     build:
-      context: ./api
+      context: ./server
     ports:
       - "8080:8080"
     depends_on:
@@ -32,16 +32,6 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
       - ./database/gyncer.sql:/docker-entrypoint-initdb.d/gyncer.sql
-    restart: always
-  syncbridge:
-    build:
-      context: ./syncbridge
-    depends_on:
-      - mysql
-    networks:
-      - gyncer-network
-    environment:
-      - GYNCER_META_SYNC_FREQUENCY=${GYNCER_META_SYNC_FREQUENCY}
     restart: always
 networks:
   gyncer-network:
