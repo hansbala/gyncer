@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS SpotifyKeys (
     refresh_token VARCHAR(500) NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES Users(id)
-)
+);
 
 CREATE TABLE IF NOT EXISTS GoogleKeys (
     -- unique id for this key
@@ -64,4 +64,4 @@ CREATE TABLE IF NOT EXISTS GoogleKeys (
     refresh_token VARCHAR(500) NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES Users(id)
-)
+);
