@@ -1,0 +1,24 @@
+# This should be copied over to config.toml and the appropriate values must be set
+
+# API accesses database using root user and password
+# I might change this in the future
+[database]
+mysql_root_user=""
+mysql_root_password=""
+mysql_user=""
+mysql_password=""
+# see gyncer.sql for the database schema
+mysql_database="gyncer"
+# you might want to override this if you have MySQL running for different
+# projects to prevent port conflict
+mysql_host_port=3306
+
+[server]
+# openssl rand -base64 64
+jwt_secret=""
+# debug | release
+gin_mode="debug"
+# Meta sync frequency in minutes
+# I don't forsee this running for than once per minute so that's why I chose it
+# ex: 5 will have gyncer scan for new syncs every 5 minutes
+gyncer_meta_sync_frequency=""

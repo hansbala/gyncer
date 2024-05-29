@@ -23,6 +23,8 @@ RUN apk --no-cache add ca-certificates
 
 WORKDIR /root/
 
+COPY config/config.toml config/config.toml
+
 # Copy the Pre-built binary file from the previous stage
 COPY --from=builder /app/server .
 

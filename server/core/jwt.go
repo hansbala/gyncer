@@ -3,10 +3,10 @@ package core
 import (
 	"errors"
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/golang-jwt/jwt"
+	"github.com/hansbala/gyncer/config"
 )
 
 type Claims struct {
@@ -16,7 +16,8 @@ type Claims struct {
 
 // generates a new JWT auth token
 func GenerateJWT(email string) (string, error) {
-	secretToken := os.Getenv("JWT_SECRET")
+	config := config.GetConfig()
+	secretToken := config.Server.JwtSecret
 	expirationTime := time.Now().Add(15 * time.Minute)
 	claims := &Claims{
 		Email: email,
@@ -35,7 +36,8 @@ func GenerateJWT(email string) (string, error) {
 
 // validates a signed JWT auth token
 func ValidateJWT(signedToken string) (*Claims, error) {
-	secretToken := os.Getenv("JWT_SECRET")
+	config := config.GetConfig()
+	secretToken := config.Server.JwtSecret
 	token, err := jwt.ParseWithClaims(signedToken, &Claims{}, func(token *jwt.Token) (interface{}, error) {
 		return []byte(secretToken), nil
 	})

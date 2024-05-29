@@ -2,10 +2,9 @@ package main
 
 import (
 	"fmt"
-	"os"
-	"strconv"
 	"time"
 
+	"github.com/hansbala/gyncer/config"
 	"github.com/hansbala/gyncer/core"
 )
 
@@ -13,30 +12,16 @@ import (
 // All it does is periodically scan the database for syncs to be performed
 // and perform them.
 func StartSyncBridge() {
-	metaSyncFrequency, err := getMetaSyncFrequency()
-	if err != nil {
-		panic(err)
-	}
+	config := config.GetConfig()
+	syncFrequencyMinutes := config.Server.MetaSyncFrequency
+	// fmt.Println(syncFrequencyMinutes)
 
-	// run runSyncJobs every metaSyncFrequency minutes then sleep for metaSyncFrequency minutes
+	// run sync jobs and sleep for syncFrequencyMinutes
 	for {
 		runSyncJobs()
-		sleepTime := metaSyncFrequency * 60
-		fmt.Printf("sleeping for %d minutes\n", metaSyncFrequency)
-		sleepTimeInt64 := int64(sleepTime)
-		sleepTimeDuration := time.Duration(sleepTimeInt64) * time.Second
-		time.Sleep(sleepTimeDuration)
+		sleepTime := time.Duration(syncFrequencyMinutes) * time.Minute
+		time.Sleep(sleepTime)
 	}
-}
-
-// returns sync frequency in minutes (read from environment variable)
-func getMetaSyncFrequency() (int, error) {
-	syncFrequency := os.Getenv("GYNCER_META_SYNC_FREQUENCY")
-	syncFrequencyInt, err := strconv.Atoi(syncFrequency)
-	if err != nil {
-		return -1, err
-	}
-	return syncFrequencyInt, nil
 }
 
 func runSyncJobs() {

@@ -2,21 +2,23 @@ package database
 
 import (
 	"database/sql"
-	"os"
+	"fmt"
 
 	"github.com/go-sql-driver/mysql"
+	"github.com/hansbala/gyncer/config"
 )
 
 var sqlConnection *sql.DB
 
 // this should only be called once when the service first receives a request
 func instantiateDBConnection() error {
+	config := config.GetConfig()
 	cfg := mysql.Config{
-		User:   os.Getenv("MYSQL_ROOT_USER"),
-		Passwd: os.Getenv("MYSQL_ROOT_PASSWORD"),
+		User:   config.Database.MySqlRootUser,
+		Passwd: config.Database.MySqlRootPassword,
 		Net:    "tcp",
-		Addr:   "mysql:3306",
-		DBName: os.Getenv("MYSQL_DATABASE"),
+		Addr:   "mysql:" + fmt.Sprintf("%d", config.Database.MySqlPort),
+		DBName: config.Database.MySqlDatabase,
 	}
 
 	// Get a database handle.
