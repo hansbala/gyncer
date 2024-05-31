@@ -8,6 +8,9 @@ services:
       - mysql
     networks:
       - gyncer-network
+    volumes:
+      - ./server:/app # Mount the source code directory to the container
+      - /app/tmp # Exclude the tmp directory used by Air from the volume
     restart: always
   mysql:
     image: mysql:latest

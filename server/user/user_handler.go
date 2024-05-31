@@ -49,7 +49,7 @@ func LogInUserHandler(c *gin.Context) {
 		return
 	}
 	if !isValidUser {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, "you are not authorized brrrrr")
+		c.AbortWithStatusJSON(http.StatusUnauthorized, "you are not authorized brrrrr. live reloading")
 		return
 	}
 
