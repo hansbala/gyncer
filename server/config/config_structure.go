@@ -4,6 +4,7 @@ type Config struct {
 	Database Database `toml:"database"`
 	Server   Server   `toml:"server"`
 	Spotify  Spotify  `toml:"spotify"`
+	Youtube  Youtube  `toml:"youtube"`
 }
 
 type Database struct {
@@ -22,6 +23,12 @@ type Server struct {
 }
 
 type Spotify struct {
+	GyncerClientId     string `toml:"gyncer_client_id"`
+	GyncerClientSecret string `toml:"gyncer_client_secret"`
+	GyncerRedirectUrl  string `toml:"gyncer_redirect_url"`
+}
+
+type Youtube struct {
 	GyncerClientId     string `toml:"gyncer_client_id"`
 	GyncerClientSecret string `toml:"gyncer_client_secret"`
 	GyncerRedirectUrl  string `toml:"gyncer_redirect_url"`

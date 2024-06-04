@@ -56,12 +56,12 @@ CREATE TABLE IF NOT EXISTS GoogleKeys (
     id INT NOT NULL AUTO_INCREMENT,
     -- user id associated with this key (hash of the user email)
     user_id VARCHAR(64) UNIQUE NOT NULL,
-    -- auth code spotify gave us
-    auth_code VARCHAR(1000) NOT NULL,
     -- access token (this is used to make the API call)
     access_token VARCHAR(500) NOT NULL,
-    -- `refresh_token` along with `auth_code` is used to retrieve new `access_token`
+    -- `refresh_token` along with `access_token` is used to retrieve new `access_token`
     refresh_token VARCHAR(500) NOT NULL,
+    -- `expiry` is the time when this token expires
+    expiry TIMESTAMP NOT NULL,
     PRIMARY KEY (id),
     FOREIGN KEY (user_id) REFERENCES Users(id)
 );

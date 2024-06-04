@@ -30,3 +30,11 @@ gyncer_client_id=""
 gyncer_client_secret=""
 # Redirect URL after authentication
 gyncer_redirect_url=""
+
+[youtube]
+# Client id for the Gyncer Google App (you can create an app of your own and substitute)
+gyncer_client_id=""
+# Client secret for the Gyncer Google App (you can create an app of your own and substitute)
+gyncer_client_secret=""
+# Redirect URL after authentication
+gyncer_redirect_url=""
