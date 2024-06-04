@@ -22,3 +22,11 @@ gin_mode="debug"
 # I don't forsee this running for than once per minute so that's why I chose it
 # ex: 5 will have gyncer scan for new syncs every 5 minutes
 gyncer_meta_sync_frequency=""
+
+[spotify]
+# Client id for the Gyncer App (you can create an app of your own and substitute)
+gyncer_client_id=""
+# Client secret for the Gyncer App (you can create an app of your own and substitute)
+gyncer_client_secret=""
+# Redirect URL after authentication
+gyncer_redirect_url=""
