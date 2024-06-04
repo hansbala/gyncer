@@ -13,6 +13,7 @@ func StartSyncsHandler(c *gin.Context) {
 	var sync database.StartSync
 	if err := c.BindJSON(&sync); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "malformed input"})
+		return
 	}
 
 	db, err := database.ConnectToDB()
@@ -24,10 +25,12 @@ func StartSyncsHandler(c *gin.Context) {
 	syncDatas, err := database.GetSyncDatas(db, sync.SyncIds)
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 
 	if err = StartSyncWrapper(syncDatas); err != nil {
 		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
 	}
 	c.JSON(http.StatusOK, gin.H{"message": fmt.Sprintf("success: finished %d syncs", len(sync.SyncIds))})
 }
