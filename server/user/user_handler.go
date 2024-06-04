@@ -34,6 +34,7 @@ func LogInUserHandler(c *gin.Context) {
 	var currentUser database.UserCredentials
 	if err := c.BindJSON(&currentUser); err != nil {
 		c.AbortWithStatusJSON(http.StatusBadRequest, "malformed input")
+		return
 	}
 
 	db, err := database.ConnectToDB()
