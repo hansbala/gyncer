@@ -1,10 +1,11 @@
 package syncs
 
 import (
+	"errors"
+
 	"github.com/hansbala/gyncer/core"
 	"github.com/hansbala/gyncer/database"
 	"github.com/hansbala/gyncer/sync_engine"
-	"gopkg.in/errgo.v2/fmt/errors"
 )
 
 // receives a list of syncs to perform, updates the database for each one.
@@ -25,7 +26,7 @@ func getClientFromDatasource(datasource core.Datasource) (sync_engine.MusicProvi
 	case core.DatasourceYoutube:
 		return &sync_engine.YoutubeClient{}, nil
 	default:
-		return nil, errors.New("Unknown datasource")
+		return nil, errors.New("unknown datasource")
 	}
 
 }
@@ -48,4 +49,6 @@ func startSync(sync database.Sync) error {
 	// ... Probably some more options but these suit my use-cases.
 	sourceMusicProvider.FetchPlaylistItems(sync.SourcePlaylistId)
 	destinationMusicProvider.FetchPlaylistItems(sync.DestinationPlaylistId)
+
+	return nil
 }
