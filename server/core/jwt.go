@@ -52,3 +52,12 @@ func ValidateJWT(signedToken string) (*Claims, error) {
 	}
 	return claims, nil
 }
+
+// Extracts the user email from a signed JWT token
+func GetEmailFromJWT(signedToken string) (string, error) {
+	claims, err := ValidateJWT(signedToken)
+	if err != nil {
+		return "", err
+	}
+	return claims.Email, nil
+}

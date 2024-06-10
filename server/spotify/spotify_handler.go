@@ -6,7 +6,9 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/hansbala/gyncer/config"
+	"github.com/hansbala/gyncer/core"
 	"github.com/hansbala/gyncer/database"
+	"github.com/hansbala/gyncer/middleware"
 	"github.com/zmb3/spotify/v2"
 	spotify_auth "github.com/zmb3/spotify/v2/auth"
 )
@@ -40,15 +42,23 @@ func CreateAuthUrlHandler(c *gin.Context) {
 	c.JSON(http.StatusOK, gin.H{"auth_url": authUrl})
 }
 
-type authenticateUserRequest struct {
-	UserId string `json:"user_id"`
-}
-
 func AuthenticateUserHandler(c *gin.Context) {
 	// extract user id from request
-	var request authenticateUserRequest
-	if err := c.ShouldBindJSON(&request); err != nil {
-		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "malformed request"})
+	jwtToken, err := middleware.GetTokenFromRequest(c)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+	// get user email
+	userEmail, err := core.GetEmailFromJWT(jwtToken)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"error": err.Error()})
+		return
+	}
+	// get user id by hashing the email
+	userId, err := core.HashString(userEmail)
+	if err != nil {
+		c.AbortWithStatusJSON(http.StatusInternalServerError, gin.H{"errors": "failed to hash user email"})
 		return
 	}
 
@@ -71,7 +81,7 @@ func AuthenticateUserHandler(c *gin.Context) {
 	// save the credentials to database
 	spotifyCredentials := database.SpotifyCredential{
 		Token:  token,
-		UserId: request.UserId,
+		UserId: userId,
 	}
 	db, err := database.ConnectToDB()
 	if err != nil {

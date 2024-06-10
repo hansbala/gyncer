@@ -4,13 +4,14 @@ services:
       context: ./server
     ports:
       - "8080:8080"
+      # - "8081:8081"
     depends_on:
       - mysql
     networks:
       - gyncer-network
     volumes:
       - ./server:/app # Mount the source code directory to the container
-      - /app/tmp # Exclude the tmp directory used by Air from the volume
+      # - /app/tmp # Exclude the tmp directory used by Air from the volume
     restart: always
   mysql:
     image: mysql:latest

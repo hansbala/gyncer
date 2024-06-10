@@ -4,14 +4,14 @@ WORKDIR /app
 
 RUN go install github.com/air-verse/air@latest
 
-COPY go.mod go.sum ./
-RUN go mod download
+# COPY go.mod go.sum ./
+# RUN go mod download
 
 # Copy the configuration file for Air
-COPY .air.toml .air.toml
+# COPY .air.toml .air.toml
 
 # Copy project config
-COPY config/config.toml config/config.toml
+# COPY config/config.toml config/config.toml
 
 EXPOSE 8080
 CMD ["air", "-c", ".air.toml"]
