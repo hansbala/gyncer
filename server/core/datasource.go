@@ -1,19 +1,21 @@
 package core
 
-// represents a type of music streaming service
-type Datasource string
+type Datasource interface {
+	GetName() string
+	GetClient() DatasourceClient
+}
 
 const (
-	DatasourceSpotify Datasource = "Spotify"
-	DatasourceYoutube Datasource = "Youtube"
-	DatasourceTidal   Datasource = "Tidal"
+	CDatasourceSpotify         = "Spotify"
+	CDatasourceYoutube         = "Youtube"
+	CTotalSupportedDatasources = 3
 )
 
 // helper function usually used when validating user input from network
-func (datasource Datasource) IsValidDatasource() bool {
+func IsValidDatasource(datasource string) bool {
 	switch datasource {
 	// keep up to date with the list of datasources
-	case DatasourceSpotify, DatasourceYoutube, DatasourceTidal:
+	case CDatasourceSpotify, CDatasourceYoutube:
 		return true
 	}
 	return false

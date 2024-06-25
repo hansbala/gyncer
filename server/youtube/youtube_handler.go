@@ -1,7 +1,6 @@
 package youtube
 
 import (
-	"context"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -51,19 +50,18 @@ func AuthenticateUserHandler(c *gin.Context) {
 		c.AbortWithStatusJSON(http.StatusBadRequest, gin.H{"error": "malformed request"})
 		return
 	}
-
 	// get auth token from request query params
 	oauth2Config := getOauth2Config()
-	token, err := oauth2Config.Exchange(c.Request.Context(), request.Code)
+	token, err := oauth2Config.Exchange(c.Request.Context(), c.Query("code"))
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "could not get token"})
 		return
 	}
 
-	client := oauth2Config.Client(context.Background(), token)
+	client := oauth2Config.Client(c.Request.Context(), token)
 	service, err := youtube.New(client)
 	// check if all is okay - this should be an authenticated client
-	_, err = service.Channels.List("snippet").Do()
+	_, err = service.Channels.List([]string{"snippet"}).Do()
 	if err != nil {
 		c.AbortWithStatusJSON(http.StatusForbidden, gin.H{"error": "could not get current user" + err.Error()})
 		return

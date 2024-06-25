@@ -5,7 +5,6 @@ import (
 	"time"
 
 	"github.com/hansbala/gyncer/config"
-	"github.com/hansbala/gyncer/core"
 )
 
 // I wanted to keep naming unique. This is basically emulating cron.
@@ -25,6 +24,5 @@ func StartSyncBridge() {
 }
 
 func runSyncJobs() {
-	fmt.Println(core.DatasourceSpotify)
 	fmt.Println("running sync jobs")
 }

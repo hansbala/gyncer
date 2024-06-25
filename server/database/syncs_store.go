@@ -58,10 +58,10 @@ type StartSync struct {
 }
 
 func (sync *Sync) IsValidSync() bool {
-	if !core.Datasource(sync.SourceDatasource).IsValidDatasource() {
+	if !core.IsValidDatasource(sync.SourceDatasource) {
 		return false
 	}
-	if !core.Datasource(sync.DestinationDatasource).IsValidDatasource() {
+	if !core.IsValidDatasource(sync.DestinationDatasource) {
 		return false
 	}
 	return sync.SyncFrequency > 0
